@@ -42,26 +42,29 @@ def draw_data(data):
         canvas.create_text(x0+2, y0, anchor=SW, text=str(data[index]))
 
 
-# def get_user_values():
-#     """Get the user values."""
-#     try:
-#         min_value = int(min_entry.get())
-#         max_value = int(max_entry.get())
-#         size_value = int(size_entry.get())
-#     except ValueError:
-#         err_message = "Only Integers Values Are Allowed for Min, Max, and Size."
-#         messagebox.showinfo("Invalid Value", err_message)
-#     else:
-#         return [True, min_value, max_value, size_value]
-#     finally:
-#         return [False]
-
 def generate():
     """Get the user choice for the algorithm."""
     print('Alg Selected: ' + SELECTED_ALGORITHM.get())
-    min_value = int(min_entry.get())
-    max_value = int(max_entry.get())
-    size_value = int(size_entry.get())
+    try:
+        min_value = int(min_entry.get())
+    except ValueError:
+        min_value = 1
+
+    try:
+        max_value = int(max_entry.get())
+    except ValueError:
+        max_value = 10
+
+    try:
+        size_value = int(size_entry.get())
+    except ValueError:
+        size_value = 10
+
+    min_value = min_value if min_value > 0 else 0
+    max_value = max_value if max_value <= 100 else 100
+    size_value = size_value if size_value <= 30 or size_value < 3 else 25
+    if min_value > max_value:
+        min_value, max_value = max_value, min_value
     data = []
     for _ in range(size_value):
         data.append(random.randrange(min_value, max_value+1))
