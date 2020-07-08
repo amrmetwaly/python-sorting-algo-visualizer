@@ -1,8 +1,10 @@
 """Sorting Algorithms in Visualized in Python using Tkinter."""
 
-from tkinter import *
-from tkinter import ttk, messagebox
 import random
+from bubble_sort import bubble_sort
+from merge_sort import merge_sort
+from tkinter import *
+from tkinter import ttk
 
 # region Tk initialize
 root = Tk()
@@ -13,10 +15,11 @@ root.config(bg='black')
 
 # Global Variables
 SELECTED_ALGORITHM = StringVar()
-ALGORITHMS_SUPPORTED = ['Bubble Sort', 'Merge Sort']
+ALGORITHMS_SUPPORTED = ['Bubble Sort', 'Merge Sort', 'Quick Sort']
+DATA = []
 
 
-def draw_data(data):
+def draw_data(data, color_array):
     """Draw our data visualization.
 
     :param list data: the data list of integers to be sorted.
@@ -38,37 +41,36 @@ def draw_data(data):
         x1 = (index + 1) * x_width + offset
         y1 = canvas_height
 
-        canvas.create_rectangle(x0, y0, x1, y1, fill='red')
-        canvas.create_text(x0+2, y0, anchor=SW, text=str(data[index]))
+        canvas.create_rectangle(x0, y0, x1, y1, fill=color_array[index])
+        canvas.create_text(x0 + 2, y0, anchor=SW, text=str(data[index]))
+    root.update_idletasks()
 
 
 def generate():
     """Get the user choice for the algorithm."""
-    print('Alg Selected: ' + SELECTED_ALGORITHM.get())
-    try:
-        min_value = int(min_entry.get())
-    except ValueError:
-        min_value = 1
-
-    try:
-        max_value = int(max_entry.get())
-    except ValueError:
-        max_value = 10
-
-    try:
-        size_value = int(size_entry.get())
-    except ValueError:
-        size_value = 10
-
-    min_value = min_value if min_value > 0 else 0
-    max_value = max_value if max_value <= 100 else 100
-    size_value = size_value if size_value <= 30 or size_value < 3 else 25
-    if min_value > max_value:
-        min_value, max_value = max_value, min_value
-    data = []
+    global DATA
+    min_value = int(min_entry.get())
+    max_value = int(max_entry.get())
+    size_value = int(size_entry.get())
+    DATA = []
     for _ in range(size_value):
-        data.append(random.randrange(min_value, max_value+1))
-    draw_data(data)
+        DATA.append(random.randrange(min_value, max_value + 1))
+    draw_data(DATA, ['red' for x in range(len(DATA))])
+
+
+def start_algorithm():
+    """Start algorithm."""
+    global DATA
+    if not DATA:
+        return
+    speed = speed_scale.get()
+    if algorithm_menu.get() == 'Bubble Sort':
+        bubble_sort(data=DATA, draw_data=draw_data, time_tick=speed)
+    elif algorithm_menu.get() == 'Merge Sort':
+        merge_sort(data=DATA, draw_data=draw_data, time_tick=speed)
+
+    # Always color the array elements in green after done sorting.
+    draw_data(DATA, ['green' for x in range(len(DATA))])
 
 
 # region Frame / Base Layout
@@ -88,26 +90,33 @@ algorithm_menu = ttk.Combobox(ui_frame, textvariable=SELECTED_ALGORITHM,
                               values=ALGORITHMS_SUPPORTED)
 algorithm_menu.grid(row=0, column=1, padx=5, pady=5)
 algorithm_menu.current(0)
-Button(ui_frame, text='Generate', command=generate, bg='red').grid(row=0,
-                                                                   column=2,
-                                                                   padx=5,
-                                                                   pady=5)
+
+speed_scale = Scale(ui_frame, from_=0.1, to=2.0, length=200, digits=2,
+                    resolution=0.2, orient=HORIZONTAL, label="Select Speed [s]")
+speed_scale.grid(row=0, column=2, padx=5, pady=5)
+Button(ui_frame, text='Start', command=start_algorithm, bg='red').grid(row=0,
+                                                                       column=3,
+                                                                       padx=5,
+                                                                       pady=5)
 # endregion Row[0]
 # region Row[1]
-Label(ui_frame, text='Size ', bg='grey').grid(row=1, column=0, padx=5, pady=5,
-                                              sticky=W)
-size_entry = Entry(ui_frame)
-size_entry.grid(row=1, column=1, padx=5, pady=5, sticky=W)
+size_entry = Scale(ui_frame, from_=3, to=25, length=200,
+                   resolution=1, orient=HORIZONTAL, label="Data Size")
+size_entry.grid(row=1, column=0, padx=5, pady=5)
 
-Label(ui_frame, text='Min Value', bg='grey').grid(row=1, column=2, padx=5,
-                                                  pady=5, sticky=W)
-min_entry = Entry(ui_frame)
-min_entry.grid(row=1, column=3, padx=5, pady=5, sticky=W)
+min_entry = Scale(ui_frame, from_=0, to=10, length=200,
+                  resolution=1, orient=HORIZONTAL, label="Data Min Value")
+min_entry.grid(row=1, column=1, padx=5, pady=5)
 
-Label(ui_frame, text='Max Value', bg='grey').grid(row=1, column=4, padx=5,
-                                                  pady=5, sticky=W)
-max_entry = Entry(ui_frame)
-max_entry.grid(row=1, column=5, padx=5, pady=5, sticky=W)
+max_entry = Scale(ui_frame, from_=10, to=100, length=200,
+                  resolution=1, orient=HORIZONTAL, label="Data Max Value")
+max_entry.grid(row=1, column=2, padx=5, pady=5)
+
+Button(ui_frame, text='Generate', command=generate, bg='white').grid(
+    row=1,
+    column=3,
+    padx=5,
+    pady=5)
 # endregion Row[1]
 
 # endregion User Interface Area
