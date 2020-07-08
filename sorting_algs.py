@@ -3,6 +3,7 @@
 import random
 from bubble_sort import bubble_sort
 from merge_sort import merge_sort
+from quick_sort import quick_sort
 from tkinter import *
 from tkinter import ttk
 
@@ -68,6 +69,8 @@ def start_algorithm():
         bubble_sort(data=DATA, draw_data=draw_data, time_tick=speed)
     elif algorithm_menu.get() == 'Merge Sort':
         merge_sort(data=DATA, draw_data=draw_data, time_tick=speed)
+    elif algorithm_menu.get() == 'Quick Sort':
+        quick_sort(DATA, 0, len(DATA)-1, draw_data=draw_data, time_tick=speed)
 
     # Always color the array elements in green after done sorting.
     draw_data(DATA, ['green' for x in range(len(DATA))])
