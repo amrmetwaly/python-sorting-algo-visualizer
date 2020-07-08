@@ -24,6 +24,7 @@ def draw_data(data, color_array):
     """Draw our data visualization.
 
     :param list data: the data list of integers to be sorted.
+    :param list color_array: the colors chosen for the array of data.
     :rtype: None
     """
     canvas.delete("all")
@@ -60,17 +61,21 @@ def generate():
 
 
 def start_algorithm():
-    """Start algorithm."""
+    """Start Sorting algorithm."""
     global DATA
+
     if not DATA:
         return
-    speed = speed_scale.get()
+
+    chosen_speed = speed_scale.get()
+
     if algorithm_menu.get() == 'Bubble Sort':
-        bubble_sort(data=DATA, draw_data=draw_data, time_tick=speed)
+        bubble_sort(data=DATA, draw_data=draw_data, time_tick=chosen_speed)
     elif algorithm_menu.get() == 'Merge Sort':
-        merge_sort(data=DATA, draw_data=draw_data, time_tick=speed)
+        merge_sort(data=DATA, draw_data=draw_data, time_tick=chosen_speed)
     elif algorithm_menu.get() == 'Quick Sort':
-        quick_sort(DATA, 0, len(DATA)-1, draw_data=draw_data, time_tick=speed)
+        quick_sort(DATA, 0, len(DATA)-1, draw_data=draw_data,
+                   time_tick=chosen_speed)
 
     # Always color the array elements in green after done sorting.
     draw_data(DATA, ['green' for x in range(len(DATA))])

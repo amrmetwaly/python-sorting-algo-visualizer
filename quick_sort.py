@@ -3,7 +3,15 @@ import time
 
 
 def partition(data, head, tail, draw_data, time_tick):
-    """Partitioning the array."""
+    """Partitioning the array.
+
+    :param list data: data array to be partitioned.
+    :param int head: head of the data.
+    :param int tail: tail of the data.
+    :param func draw_data: function to draw the data.
+    :param int time_tick: time to sleep in seconds.
+    :returns int border: border element for next iteration.
+    """
     border = head
     pivot = data[tail]
 
@@ -32,7 +40,14 @@ def partition(data, head, tail, draw_data, time_tick):
 
 
 def quick_sort(data, head, tail, draw_data, time_tick):
-    """Quick Sort the given Array."""
+    """Quick Sort the given Array.
+
+    :param list data: data array to be sorted.
+    :param int head: head of the data.
+    :param int tail: tail of the data.
+    :param func draw_data: function to draw the data.
+    :param int time_tick: time to sleep in seconds.
+    """
     if head < tail:
         partition_index = partition(data, head, tail, draw_data, time_tick)
 
@@ -45,7 +60,17 @@ def quick_sort(data, head, tail, draw_data, time_tick):
 
 def get_color_array(data_length, head, tail, border, curr_index,
                     is_swapping=False):
-    """Get the element colors for the given array."""
+    """Get the element colors for the given array.
+
+    :param int data_length: length of the data list.
+    :param int head: head of the data.
+    :param int tail: tail of the data.
+    :param int border: border element of the data being sorted.
+    :param int curr_index: the current index.
+    :param bool is_swapping: is swapping already taking place.
+    :returns list[str] color_array: list of colors for each element in the
+        data being sorted.
+    """
     color_array = []
     for i in range(data_length):
         # Base Coloring
